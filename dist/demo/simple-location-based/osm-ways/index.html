@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AR.js OSM Ways</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script type='text/javascript' src='../../../three.js/build/ar-threex-location-only.js'></script>
+    <script type='text/javascript' src='../../../aframe/build/aframe-ar.js'></script>
+    <script type='text/javascript' src='index.js'></script>
+    <script type='text/javascript' src='osm.js'></script>
+    <script type='text/javascript' src='osmway.js'></script>
+    <link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+
+<body style='margin: 0; overflow: hidden'>
+    <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
+        renderer='logarithmicDepthBuffer: false;'>
+        <a-camera gps-new-camera='gpsMinDistance: 1;' position='0 20 0' wasd-controls='acceleration: 1300'></a-camera>
+        <a-entity osm></a-entity>
+
+    </a-scene>
+    <div id='status'></div>
+    <div id='currentstate'></div>
+</body>
+
+</html>

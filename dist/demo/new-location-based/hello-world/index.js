@@ -7,6 +7,42 @@ window.onload = () => {
         maximumAge: 0
     };
 
+    function drawObjects() {
+        const el = document.querySelector("[gps-new-camera]");
+        var data = [
+            {
+                "latitude": -6.3158764,
+                "longitude": 106.6654446
+            }
+        ]
+        
+        document.querySelector("a-scene").replaceChildren();
+        
+        data.forEach(obj => {
+            const compoundEntity = document.createElement("a-entity");
+            compoundEntity.setAttribute('gps-new-entity-place', {
+                latitude: obj.latitude,
+                longitude: obj.longitude
+            });
+
+            const box = document.createElement("a-box");
+            box.setAttribute('material', { color: 'red' } );
+            box.setAttribute("scale", {
+                x: 1,
+                y: 1,
+                z: 1
+            });
+            box.setAttribute("position", { 
+                x : 0,
+                y : 0,
+                z: 0 
+            } );
+
+            compoundEntity.appendChild(box);
+            document.querySelector("a-scene").appendChild(compoundEntity);
+        })
+    }
+
     function simplifyNumber(str) {
         const num = Number(str); // convert to number
         if (!isNaN(num)) { // check if number is valid
@@ -33,12 +69,15 @@ window.onload = () => {
             timeStyle: "medium",
         });
         var currentstate = document.querySelector('#currentstate');
-        currentstate.innerHTML = `Latitude/Longitude: ${position.coords.latitude} ${position.coords.longitude}
+        currentstate.innerHTML = `Info 2:
+            <br/>Latitude Longitude: ${position.coords.latitude} ${position.coords.longitude}
 			<br/>Accuracy: ${simplifyNumber(position.coords.accuracy)}m
 			<br/>Altitude: ${simplifyNumber(position.coords.altitude)}m
 			<br/>altitudeAccuracy: ${simplifyNumber(position.coords.altitudeAccuracy)}m
 			<br/>heading: ${simplifyNumber(position.coords.heading)}deg
 			<br/>timestamp: ${formatter.format(new Date(position.timestamp))}`;
+
+        drawObjects();
     }
 
     // define the error callback function

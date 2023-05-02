@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>AR.js A-Frame</title>
+	<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+	<script type='text/javascript' src='../../three.js/build/ar-threex-location-only.js'></script>
+	<script type='text/javascript' src='../../aframe/build/aframe-ar.js'></script>
+	<link rel="stylesheet" type="text/css" href="./index.css">
+	<script src='./index.js'></script>
+</head>
+
+<body>
+	<a-scene
+        vr-mode-ui="enabled: false"
+        renderer="antialias: true; alpha: true"
+        fog="type: linear; color: #AAA"
+        >
+        <a-camera gps-new-camera='gpsMinDistance: 5' arjs-device-orientation-controls='smoothingFactor: 0.1'></a-camera>
+		<a-entity material='color: yellow' geometry='primitive: box'
+			gps-new-entity-place="latitude: -6.315339137351102; longitude: 106.66475374819677" scale="1 1 1"></a-entity>
+		<a-entity material='color: blue' geometry='primitive: box'
+			gps-new-entity-place="latitude: -6.316040277022857; longitude: 106.66529957774348" scale="1 1 1"></a-entity>
+		<a-entity material='color: green' geometry='primitive: box'
+			gps-new-entity-place="latitude: -6.315187179192479; longitude: 106.66531701210018" scale="1 1 1"></a-entity>
+	</a-scene>
+</body>
+</html>

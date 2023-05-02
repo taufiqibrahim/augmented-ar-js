@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AR.js A-Frame Location-based</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script type='text/javascript' src='../../../three.js/build/ar-threex-location-only.js'></script>
+	<script type='text/javascript' src='../../../aframe/build/aframe-ar.js'></script>
+    <script src='./index.js'></script>
+    <link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+
+<body>
+    <a-scene
+        vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
+        renderer='antialias: true; alpha: true'>
+        <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
+    </a-scene>
+
+    <div id='currentstate'></div>
+</body>
+
+</html>
