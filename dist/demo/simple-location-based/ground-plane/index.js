@@ -1,53 +1,39 @@
-// window.onload = () => {
+window.onload = () => {
+    console.log("on load")
 
-//     const el = document.querySelector("[gps-new-camera]");
+    AFRAME.registerComponent("ground-hit-test", {
+        init: function () {
+            this.raycaster = new THREE.Raycaster();
+            this.cameraPosition = new THREE.Vector2(0, 0);
+            this.scene = this.el.sceneEl.object3D;
+            this.groundPlane = this.el.sceneEl.querySelector("#ground-plane");
 
-//     let rendered = false;
-//     let changes = 1;
+            this.hitTest = this.hitTest.bind(this);
 
-//     el.addEventListener("gps-camera-update-position", async (e) => {
+            // Listen for the AR camera's "loaded" event
+            this.el.sceneEl.camera.addEventListener("loaded", this.hitTest);
+        },
+        hitTest: function () {
+            console.log("hit test")
+            this.cameraPosition.set(0, 0);
+            this.raycaster.setFromCamera(this.cameraPosition, this.scene);
 
-//         if (!rendered) {
-//             var deviceLongitude = e.detail.position.longitude;
-//             var deviceLatitude = e.detail.position.latitude;
-//             changes = changes + 1;
+            // Perform the hit test against the ground plane
+            const intersects = this.raycaster.intersectObject(this.groundPlane.object3D, true);
 
-//             var currentstate = document.querySelector('#currentstate');
-//             currentstate.innerHTML = `Gps Info:
-//                 <br/>Latitude: ${deviceLatitude}
-//                 <br/>Longitude: ${deviceLongitude}
-//                 <br/>Changes: ${changes}`;
+            if (intersects.length > 0) {
+                const intersection = intersects[0];
+                console.log("Intersection point:", intersection.point);
 
-//             console.log("Device coordinate:", deviceLongitude, deviceLatitude);
+                // Here you can place your custom meshes or models on the ground
+                const mesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(1, 1, 1),
+                    new THREE.MeshBasicMaterial({ color: "blue" })
+                );
+                mesh.position.copy(intersection.point);
+                this.scene.add(mesh);
+            }
+        },
+    });
 
-//             // Create the wireframe ground plane
-//             const ground = document.createElement('a-plane');
-//             ground.setAttribute('gps-new-entity-place', `latitude: ${deviceLatitude}; longitude: ${deviceLongitude};`);
-//             ground.setAttribute('height', '16');
-//             ground.setAttribute('width', '16');
-//             ground.setAttribute('material', 'wireframe: true; color: white;');
-//             ground.setAttribute('rotation', '-90 0 0');
-//             document.querySelector("a-scene").appendChild(ground);
-
-//             // // Add grid lines to the ground plane
-//             // const numRows = 80;
-//             // const numCols = 80;
-//             // const spacing = 0.2;
-
-//             // for (let row = 0; row < numRows; row++) {
-//             //     for (let col = 0; col < numCols; col++) {
-//             //         const x = (col - numCols / 2) * spacing;
-//             //         const z = (row - numRows / 2) * spacing;
-
-//             //         const line = document.createElement('a-entity');
-//             //         line.setAttribute('line', `start: ${x} 0 ${z}; end: ${x + spacing} 0 ${z}; color: white;`);
-//             //         ground.appendChild(line);
-//             //     }
-//             // }
-
-
-//         }
-//         rendered = true;
-//     });
-
-// }
+}

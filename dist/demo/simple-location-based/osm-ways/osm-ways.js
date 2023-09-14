@@ -42,6 +42,7 @@ class OsmWay {
         realVertices.push(vertices[k][1]);
         realVertices.push(vertices[k][2] + dzperp);
 
+
         let indices = [];
         for (let i = 0; i < k; i++) {
             indices.push(i * 2, i * 2 + 1, i * 2 + 2);
@@ -61,17 +62,5 @@ class OsmWay {
         const dy = v2[1] - v1[1];
         const dz = v2[2] - v1[2];
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
-    }
-}
-
-class OsmWayPoint {
-    constructor(vertices, width=1) {
-        const points = [];
-        const k = vertices.length - 1;
-        for (let i = 0; i < k; i++) {
-            points.push(new THREE.Vector3( vertices[i][0], vertices[i][1], vertices[i][2] ))
-        }
-        let geom = new THREE.BufferGeometry().setFromPoints(points);
-        this.geometry = geom;
     }
 }

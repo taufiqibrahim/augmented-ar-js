@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AR.js Render Cards</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script type='text/javascript' src='../../../three.js/build/ar-threex-location-only.js'></script>
+    <script type='text/javascript' src='../../../aframe/build/aframe-ar.js'></script>
+    <!-- <script src="https://rawgit.com/dbradleyfl/aframe-gridhelper/master/dist/aframe-gridhelper-component.min.js"></script> -->
+    <script src='./index.js'></script>
+    <!-- <script src='./groundplane.js'></script> -->
+    <!-- <script src='./sensor.js'></script> -->
+    <!-- <script src='./clicker.js'></script> -->
+    <link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+
+<body>
+    <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
+        renderer='antialias: true; logarithmicDepthBuffer: true;'
+        >
+        <a-camera position="0 0 0" far="10000" near="0.2"></a-camera>
+        <a-plane color="red" height="4" width="4" position="0 0 -1" rotation="-50 0 0" material="src: #gridTexture"></a-plane>
+        <!-- <a-entity groundplane></a-entity> -->
+    </a-scene>
+</body>
+
+</html>

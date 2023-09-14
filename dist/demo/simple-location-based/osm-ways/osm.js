@@ -1,4 +1,6 @@
 const BASE_URL = "https://pnva33y2rxxx62ipkwd6glmmfq0rnolc.lambda-url.ap-southeast-1.on.aws";
+const OSM_VERTICAL_POS_ADJUSTMENT = 5;
+const DEFAULT_ROAD_COLOR = '#ffd700';
 
 AFRAME.registerComponent('osm', {
     schema: {
@@ -14,14 +16,9 @@ AFRAME.registerComponent('osm', {
 
     init: function () {
         console.log("osm.js init()");
-        this.downloaded = false;
         this.camera = document.querySelector("[gps-new-camera]");
         this.camera.addEventListener("gps-camera-update-position", e => {
-            if (!this.downloaded) {
-                this._readOsm(e.detail.position.latitude, e.detail.position.longitude);
-                this.downloaded = true;
-
-            }
+            this._readOsm(e.detail.position.latitude, e.detail.position.longitude);
         });
     },
 
@@ -48,6 +45,19 @@ AFRAME.registerComponent('osm', {
             }
         });
 
+    },
+
+    _convertLngLatToMercator: function (lng, lat) {
+        const RADIUS = 6378137;
+        // const MAX_LATITUDE = 85.0511287798;
+        const MAX_LATITUDE = 90.0;
+
+        const latRad = Math.max(Math.min(MAX_LATITUDE, lat), -MAX_LATITUDE) * Math.PI / 180;
+        const sinLat = Math.sin(latRad);
+        const x = RADIUS * lng * Math.PI / 180;
+        const y = -1 * (RADIUS * Math.log((1 + sinLat) / (1 - sinLat)) / 2);
+
+        return [x, y];
     },
 
     _readOsm: function (lat, lon) {
@@ -98,19 +108,26 @@ AFRAME.registerComponent('osm', {
                     let projectedCoords;
                     if (f.geometry.type == 'LineString' && f.geometry.coordinates.length >= 2) {
                         f.geometry.coordinates.forEach(coord => {
-                            projectedCoords = gpsCameraComponent.threeLoc.lonLatToWorldCoords(coord[0], coord[1]);
+                            // projectedCoords = gpsCameraComponent.threeLoc.lonLatToWorldCoords(coord[0], coord[1]);
+                            projectedCoords = this._convertLngLatToMercator(coord[0], coord[1]);
+                            // console.log(projectedCoords, projectedCoords2)
                             line.push([projectedCoords[0], 0, projectedCoords[1]]);
                         });
 
                         if (line.length >= 2) {
                             const g = new OsmWay(line, (drawProps[f.properties.highway] ? (drawProps[f.properties.highway].width || 5) : 5)).geometry;
+                            // const g = new OsmWayPoint(line, (drawProps[f.properties.highway] ? (drawProps[f.properties.highway].width || 5) : 5)).geometry;
 
-                            const color = drawProps[f.properties.highway] ? (drawProps[f.properties.highway].color || '#ffffff') : '#ffffff';
+                            const color = drawProps[f.properties.highway] ? (drawProps[f.properties.highway].color || DEFAULT_ROAD_COLOR) : DEFAULT_ROAD_COLOR;
 
                             const mesh = new THREE.Mesh(g,
                                 new THREE.MeshBasicMaterial({
                                     color: color
                                 }));
+
+                            // Adjust OSM ways vertical position (Not working!)
+                            // mesh.position.y -= OSM_VERTICAL_POS_ADJUSTMENT;
+
                             this.el.setObject3D(f.properties.osm_id, mesh);
                             objectIds.push(f.properties.osm_id);
                         }
